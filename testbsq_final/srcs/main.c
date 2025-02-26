@@ -6,7 +6,7 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 19:25:11 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/26 11:23:08 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 12:44:14 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ void	ft_mapfill(int **map, t_map	*info)
 	char	*out;
 
 	a = 0;
-	while (a < (info->rows))
+	b = 0;
+	while (a != (info->rows - 1))
 	{
-		if (!(out = malloc(sizeof(char *) * (info->cols + 2))))
+		if (!(out = malloc(sizeof(char *) * ((info->cols * info->rows) + info->rows))))
 			return ;
 		b = 0;
 		c = 0;
@@ -30,22 +31,23 @@ void	ft_mapfill(int **map, t_map	*info)
 		{
 			if (map[a][b] == -1)
 				out[c++] = info->full;
-			else if (map[a][b] == 1)
+			else if (map[a][b] == 0)
 				out[c++] = info->obstacle;
 			else
 				out[c++] = info->empty;
 			b++;
 		}
-		out[c++] = '\n';
-		out[c] = '\0';
+		if (a < info->rows - 1 || b < info->cols - 1)
+			out[c++] = '\n';
+		else
+			out[c++] = '\0';
 		ft_putstr(out);
 		free(out);
 		a++;
 	}
-
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int		c;
 	int		**ptr;
@@ -58,7 +60,6 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	c = 1;
-
 	while (c < argc)
 	{
 		map_str = (ft_maphandle(argv[c]));
@@ -76,9 +77,6 @@ int main(int argc, char **argv)
 		if (!ptr)
 			return (1);
 		ft_mapfill(ptr, &info);
-		for (int i = 0; i < info.rows; i++)
-			free(ptr[i]);
-		free(ptr);
 		c++;
 	}
 	return (0);

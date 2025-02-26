@@ -6,7 +6,7 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/26 11:03:34 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 12:39:47 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,25 @@ typedef struct s_map
 	int		cols;
 }	t_map;
 
-typedef struct	s_find_loc
+typedef struct s_find_loc
 {
 	int	x;
 	int	y;
 	int	loc;
 }	t_find_loc;
 
-void	ft_mapfill(int **map, t_map	*info);
+void				ft_putstr(char *str);
+void				ft_mapfill(int **map, t_map	*info);
+int					ft_map_size(const char *path);
+int					**ft_square(int **map, t_map *info);
+int					**ft_mapconvertor(char *originalmap, t_map *info);
+int					ft_min(int **map, int i, int j);
+int					ft_strlen(char *str);
+char				*ft_strcat(char *dest, char *src);
+char				*ft_getmap(const char *path);
+char				*ft_finalmap(char *mapstring, t_map info);
+char				*ft_maphandle(const char *path);
+struct s_map		ft_stfill(char *mapstring);
 struct s_find_loc	ft_find_sq(int **map, t_find_loc best);
-int **ft_square(int **map, t_map *info);
-int	**ft_mapconvertor(char *originalmap, t_map *info);
-int	ft_min(int **map, int i, int j);
-void	ft_putstr(char *str);
-int		ft_strlen(char *str);
-char	*ft_strcat(char *dest, char *src);
-int	ft_map_size(const char *path);
-char	*ft_getmap(const char *path);
-struct s_map ft_stfill(char	*mapstring);
-//char	*ft_finalmap(char *mapstring);
-char	*ft_finalmap(char *mapstring, t_map info);
-char	*ft_maphandle(const char	*path);
 
 #endif

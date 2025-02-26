@@ -6,7 +6,7 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 18:45:12 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/26 11:13:16 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 12:50:29 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_map	ft_stfill(char *mapstring)
 	if (!mapstring[i] || !mapstring[i + 1] || !mapstring[i + 2])
 	{
 		info.rows = -1;
-		return info;
+		return (info);
 	}
 	info.empty = mapstring[i];
 	info.obstacle = mapstring[i + 1];
@@ -90,7 +90,7 @@ t_map	ft_stfill(char *mapstring)
 	if (mapstring[i] != '\n')
 	{
 		info.rows = -1;
-		return info;
+		return (info);
 	}
 	i++;
 	while (mapstring[i] != '\n' && mapstring[i] != '\0')
@@ -108,10 +108,10 @@ char	*ft_finalmap(char *mapstring, t_map info)
 	int		c;
 	int		ic;
 	int		map_length;
+
 	c = 0;
 	ic = 0;
-
-	map_length = info.rows * info.cols;
+	map_length = (info.rows * info.cols) + info.rows - 1;
 	out = malloc(map_length + 1);
 	if (!out)
 		return (NULL);
@@ -121,7 +121,6 @@ char	*ft_finalmap(char *mapstring, t_map info)
 		c++;
 	while (mapstring[c] != '\0' && ic < map_length)
 		out[ic++] = mapstring[c++];
-	out[ic] = '\0';
 	return (out);
 }
 
@@ -149,5 +148,3 @@ char	*ft_maphandle(const char *path)
 	free(tempstr);
 	return (final);
 }
-
-
