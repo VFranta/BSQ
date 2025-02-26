@@ -10,7 +10,7 @@ OBJS	= $(SCRS:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I$(HEAD_DIR) -g
+CFLAGS = -Wall -Wextra -Werror -I$(HEAD_DIR)
 
 NAME	= bsq
 

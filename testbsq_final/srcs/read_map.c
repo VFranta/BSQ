@@ -6,7 +6,7 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 18:45:12 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/25 20:31:48 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 11:13:16 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ int	ft_map_size(const char *path)
 	char	c;
 	int		mapsize;
 
-	printf("ft_mapsize");
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 	{
-		write(1, "map Error", 10);
-		close(fd);
+		write(1, "map error\n", 10);
 		return (0);
 	}
 	mapsize = 0;
@@ -40,10 +38,13 @@ char	*ft_getmap(const char *path)
 	int		fd;
 	char	c;
 	int		in;
+	int		size;
 	char	*arr;
 
-	printf("ft_getmap");
-	arr = malloc(sizeof(char) * ft_map_size(path));
+	size = ft_map_size(path);
+	if (size <= 0)
+		return (NULL);
+	arr = malloc(sizeof(char) * (size + 1));
 	if (!arr)
 		return (NULL);
 	fd = open(path, O_RDONLY);
@@ -63,75 +64,90 @@ char	*ft_getmap(const char *path)
 	return (arr);
 }
 
-struct s_map ft_stfill(char	*mapstring)
+t_map	ft_stfill(char *mapstring)
 {
 	int		i;
 	t_map	info;
 	int		colcount;
 
 	i = 0;
-	printf("ft_stfill");
 	colcount = 0;
 	info.rows = 0;
-	while (mapstring[i] != '\n')
+	while (mapstring[i] >= '0' && mapstring[i] <= '9')
 	{
-		if (mapstring[i] >= '0' && mapstring[i] <= '9')
-		{
-			info.rows = (info.rows * 10) + mapstring[i] -'0';
-			i++;
-		}
-		info.empty = mapstring[i + 1];
-		info.obstacle = mapstring[i + 2];
-		info.full = mapstring[i + 3];
-	}
-	while (mapstring[i] != '\0')
-	{
-		if (mapstring[i] == '\n')
-			info.rows++;
+		info.rows = (info.rows * 10) + (mapstring[i] - '0');
 		i++;
-		colcount++;
 	}
-	info.cols = colcount / info.rows;
+	if (!mapstring[i] || !mapstring[i + 1] || !mapstring[i + 2])
+	{
+		info.rows = -1;
+		return info;
+	}
+	info.empty = mapstring[i];
+	info.obstacle = mapstring[i + 1];
+	info.full = mapstring[i + 2];
+	i += 3;
+	if (mapstring[i] != '\n')
+	{
+		info.rows = -1;
+		return info;
+	}
+	i++;
+	while (mapstring[i] != '\n' && mapstring[i] != '\0')
+	{
+		colcount++;
+		i++;
+	}
+	info.cols = colcount;
 	return (info);
 }
 
-char	*ft_finalmap(char *mapstring)
+char	*ft_finalmap(char *mapstring, t_map info)
 {
 	char	*out;
 	int		c;
 	int		ic;
-	t_map	info;
-
+	int		map_length;
 	c = 0;
 	ic = 0;
-	printf("ft_finalmap");
-	out = malloc(sizeof(char *) * (info.rows * info.cols));
+
+	map_length = info.rows * info.cols;
+	out = malloc(map_length + 1);
 	if (!out)
 		return (NULL);
-	while (mapstring[c] != '\n')
+	while (mapstring[c] != '\n' && mapstring[c] != '\0')
 		c++;
-	while (mapstring[c] != '\0')
+	if (mapstring[c] == '\n')
+		c++;
+	while (mapstring[c] != '\0' && ic < map_length)
 		out[ic++] = mapstring[c++];
 	out[ic] = '\0';
 	return (out);
 }
 
-char	*ft_maphandle(const char	*path)
+char	*ft_maphandle(const char *path)
 {
 	char	*tempstr;
 	char	*final;
 	t_map	info;
 
-	printf("ft_maphandle");
-	tempstr = malloc(sizeof(char *) * ft_map_size(path));
+	tempstr = ft_getmap(path);
 	if (!tempstr)
 		return (NULL);
-	tempstr = ft_getmap(path);
-	ft_stfill(tempstr);
-	final = malloc(sizeof(char *) * (info.rows * info.cols));
-	if (!final)
+	info = ft_stfill(tempstr);
+	if (info.rows <= 0 || info.cols <= 0)
+	{
+		free(tempstr);
 		return (NULL);
-	final = ft_finalmap(ft_getmap(path));
+	}
+	final = ft_finalmap(tempstr, info);
+	if (!final)
+	{
+		free(tempstr);
+		return (NULL);
+	}
+	free(tempstr);
 	return (final);
-	free (tempstr);
 }
+
+

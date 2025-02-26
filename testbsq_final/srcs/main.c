@@ -6,64 +6,80 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 19:25:11 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/25 20:36:00 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 11:23:08 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft.h"
+#include "ft.h"
 
-
-void	ft_mapfill(int **map)
+void	ft_mapfill(int **map, t_map	*info)
 {
 	int		a;
 	int		b;
 	int		c;
 	char	*out;
-	t_map	info;
 
-	a = -1;
-	if (!(out = malloc(sizeof(char *) * (info.rows))))
-		return ;
-	while (++a < (info.cols - 1))
+	a = 0;
+	while (a < (info->rows))
 	{
-		b = -1;
+		if (!(out = malloc(sizeof(char *) * (info->cols + 2))))
+			return ;
+		b = 0;
 		c = 0;
-		if (map[a][b] == -1)
-			out[c++] = info.full;
-		else if (map[a][b] == 1)
-			out[c++] = info.obstacle;
-		else
-			out[c++] = info.empty;
+		while (b < info->cols)
+		{
+			if (map[a][b] == -1)
+				out[c++] = info->full;
+			else if (map[a][b] == 1)
+				out[c++] = info->obstacle;
+			else
+				out[c++] = info->empty;
+			b++;
+		}
+		out[c++] = '\n';
+		out[c] = '\0';
+		ft_putstr(out);
+		free(out);
+		a++;
 	}
-	out[c++] = '\n';
-	out[c] = '\0';
-	ft_putstr(out);
-	free(out);
+
 }
 
 int main(int argc, char **argv)
 {
 	int		c;
 	int		**ptr;
+	char	*map_str;
+	t_map	info;
 
-	c = 1;
 	if (argc < 2)
 	{
 		write(1, "map error\n", 10);
 		return (1);
 	}
-	ptr = ft_mapconvertor(ft_maphandle(argv[c]));
-	if (!ptr)
-	{
-		write(1, "map error\n", 10);
-		return (1);
-	}
+	c = 1;
+
 	while (c < argc)
 	{
-		printf("before mapfill");
-		ft_mapfill(ptr);
+		map_str = (ft_maphandle(argv[c]));
+		if (!map_str)
+		{
+			write(1, "map error\n", 10);
+			return (1);
+		}
+		info = ft_stfill(ft_getmap(argv[c]));
+		ptr = ft_mapconvertor(map_str, &info);
+		free(map_str);
+		if (!ptr)
+			return (1);
+		ptr = ft_square(ptr, &info);
+		if (!ptr)
+			return (1);
+		ft_mapfill(ptr, &info);
+		for (int i = 0; i < info.rows; i++)
+			free(ptr[i]);
+		free(ptr);
 		c++;
 	}
-	free(ptr);
 	return (0);
 }

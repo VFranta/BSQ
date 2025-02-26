@@ -6,7 +6,7 @@
 /*   By: vfranta <vfranta@student.42prague.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 10:09:47 by vfranta           #+#    #+#             */
-/*   Updated: 2025/02/25 19:36:35 by vfranta          ###   ########.fr       */
+/*   Updated: 2025/02/26 11:03:34 by vfranta          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,56 +36,19 @@ typedef struct	s_find_loc
 	int	loc;
 }	t_find_loc;
 
-//main.c
-void	ft_mapfill(int **map);
-//new_logic.c
-struct s_find_loc	ft_find_sq(int **map);
-int	**ft_mapconvertor(char *originalmap);
-int **ft_square(int **map);
-//tools.c
+void	ft_mapfill(int **map, t_map	*info);
+struct s_find_loc	ft_find_sq(int **map, t_find_loc best);
+int **ft_square(int **map, t_map *info);
+int	**ft_mapconvertor(char *originalmap, t_map *info);
 int	ft_min(int **map, int i, int j);
 void	ft_putstr(char *str);
 int		ft_strlen(char *str);
 char	*ft_strcat(char *dest, char *src);
-
+int	ft_map_size(const char *path);
+char	*ft_getmap(const char *path);
+struct s_map ft_stfill(char	*mapstring);
+//char	*ft_finalmap(char *mapstring);
+char	*ft_finalmap(char *mapstring, t_map info);
 char	*ft_maphandle(const char	*path);
 
 #endif
-
-
-// typedef struct s_map
-// {
-// 	char	**data;
-// 	char	empty;
-// 	char	obstacle;
-// 	char	full;
-// 	int		size;//maybe not needed?
-// 	int		rows;
-// 	int		cols;
-// }	t_map;
-
-// typedef struct	s_find_loc
-// {
-// 	int	x;
-// 	int	y;
-// 	int	loc;
-// }	t_find_loc;
-
-// //main.c
-// void	ft_mapfill(int **map, t_map *info);
-// //new_logic.c
-// void	ft_find_sq(int **map, t_find_loc *best);
-// int	**ft_mapconvertor(char *originalmap, t_map *info);
-// int	**ft_square(int **map, t_map *info);
-// //tools.c
-// int	ft_min(int **map, int i, int j);
-// void	ft_putstr(char *str);
-// int		ft_strlen(char *str);
-// char	*ft_strcat(char *dest, char *src);
-// //read_map.c
-// char	**allocate_map(int y, int x);
-// char	**read_map(const char *filename, t_map info);
-// void	parse_map(char *ptr, t_map *info, int *y, int *x);
-// void	fill_map(char *ptr, t_map *info);
-// void	free_map(t_map *info);
-// char	*array_to_string(char **array, int rows);
